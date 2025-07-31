@@ -1,0 +1,85 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "C:\\Users\\LAPTOP24H\\Desktop\\emnhanvien-20250729T144449Z-1-001\\emnhanvien\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{22F18559-0304-488A-8B09-D4690234CA6B}|emnhanvien.csproj|c:\\users\\laptop24h\\desktop\\emnhanvien-20250729t144449z-1-001\\emnhanvien\\model\\quanlynhansucontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{22F18559-0304-488A-8B09-D4690234CA6B}|emnhanvien.csproj|solutionrelative:model\\quanlynhansucontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{22F18559-0304-488A-8B09-D4690234CA6B}|emnhanvien.csproj|c:\\users\\laptop24h\\desktop\\emnhanvien-20250729t144449z-1-001\\emnhanvien\\controllers\\admincontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{22F18559-0304-488A-8B09-D4690234CA6B}|emnhanvien.csproj|solutionrelative:controllers\\admincontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{22F18559-0304-488A-8B09-D4690234CA6B}|emnhanvien.csproj|c:\\users\\laptop24h\\desktop\\emnhanvien-20250729t144449z-1-001\\emnhanvien\\controllers\\nhanviencontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{22F18559-0304-488A-8B09-D4690234CA6B}|emnhanvien.csproj|solutionrelative:controllers\\nhanviencontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{22F18559-0304-488A-8B09-D4690234CA6B}|emnhanvien.csproj|c:\\users\\laptop24h\\desktop\\emnhanvien-20250729t144449z-1-001\\emnhanvien\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{22F18559-0304-488A-8B09-D4690234CA6B}|emnhanvien.csproj|solutionrelative:program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 0,
+          "Children": [
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "QuanLyNhanSuContext.cs",
+              "DocumentMoniker": "C:\\Users\\LAPTOP24H\\Desktop\\emnhanvien-20250729T144449Z-1-001\\emnhanvien\\Model\\QuanLyNhanSuContext.cs",
+              "RelativeDocumentMoniker": "Model\\QuanLyNhanSuContext.cs",
+              "ToolTip": "C:\\Users\\LAPTOP24H\\Desktop\\emnhanvien-20250729T144449Z-1-001\\emnhanvien\\Model\\QuanLyNhanSuContext.cs",
+              "RelativeToolTip": "Model\\QuanLyNhanSuContext.cs",
+              "ViewState": "AgIAABoAAAAAAAAAAAAswCUAAADRAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-07-29T15:07:10.454Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "Program.cs",
+              "DocumentMoniker": "C:\\Users\\LAPTOP24H\\Desktop\\emnhanvien-20250729T144449Z-1-001\\emnhanvien\\Program.cs",
+              "RelativeDocumentMoniker": "Program.cs",
+              "ToolTip": "C:\\Users\\LAPTOP24H\\Desktop\\emnhanvien-20250729T144449Z-1-001\\emnhanvien\\Program.cs",
+              "RelativeToolTip": "Program.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAWAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-03-28T06:39:42.241Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "AdminController.cs",
+              "DocumentMoniker": "C:\\Users\\LAPTOP24H\\Desktop\\emnhanvien-20250729T144449Z-1-001\\emnhanvien\\Controllers\\AdminController.cs",
+              "RelativeDocumentMoniker": "Controllers\\AdminController.cs",
+              "ToolTip": "C:\\Users\\LAPTOP24H\\Desktop\\emnhanvien-20250729T144449Z-1-001\\emnhanvien\\Controllers\\AdminController.cs",
+              "RelativeToolTip": "Controllers\\AdminController.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAQAAAAVAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-03-27T14:16:36.061Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "NhanVienController.cs",
+              "DocumentMoniker": "C:\\Users\\LAPTOP24H\\Desktop\\emnhanvien-20250729T144449Z-1-001\\emnhanvien\\Controllers\\NhanVienController.cs",
+              "RelativeDocumentMoniker": "Controllers\\NhanVienController.cs",
+              "ToolTip": "C:\\Users\\LAPTOP24H\\Desktop\\emnhanvien-20250729T144449Z-1-001\\emnhanvien\\Controllers\\NhanVienController.cs",
+              "RelativeToolTip": "Controllers\\NhanVienController.cs",
+              "ViewState": "AgIAAM4CAAAAAAAAAAAAAMQBAAAkAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-03-23T01:37:20.859Z"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
