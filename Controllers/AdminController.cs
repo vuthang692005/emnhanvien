@@ -890,73 +890,242 @@ namespace emnhanvien.Controllers
             return Ok(new { message = "Đã từ chối xin nghỉ phép!" });
         }
 
-        //[HttpPost("TinhLuongThang")]
-        //public async Task<IActionResult> TinhLuongThang([FromQuery] int thang, [FromQuery] int nam)
-        //{
-        //    // Lấy danh sách nhân viên
-        //    var nhanViens = await _context.NhanViens.ToListAsync();
-        //    if (!nhanViens.Any())
-        //    {
-        //        return NotFound("Không có nhân viên nào trong hệ thống.");
-        //    }
+        [HttpPost("TinhLuongThang")]
+        public async Task<IActionResult> TinhLuongThang()
+        {
+            var role = User.FindFirst(ClaimTypes.Role)?.Value;
 
-        //    List<Luong> bangLuongsMoi = new List<Luong>();
+            if (role != "Admin")
+            {
+                return Unauthorized(new { Message = "Người dùng phải là admin để dùng chức năng này" });
+            }
 
-        //    foreach (var nhanVien in nhanViens)
-        //    {
-        //        // Kiểm tra xem lương tháng này đã tính chưa
-        //        bool daTinhLuong = await _context.Luongs
-        //            .AnyAsync(l => l.MaNhanVien == nhanVien.MaNhanVien && l.Thang == thang && l.Nam == nam);
-        //        if (daTinhLuong)
-        //        {
-        //            continue; // Đã tính lương rồi => bỏ qua
-        //        }
+            var currentMonth = DateTime.Now.Month;
+            var currentYear = DateTime.Now.Year;
 
-        //        // Lấy danh sách chấm công hợp lệ trong tháng
-        //        var chamCongs = await _context.ChamCongs
-        //            .Where(c => c.MaNhanVien == nhanVien.MaNhanVien &&
-        //                        c.NgayChamCong.Year == nam &&
-        //                        c.NgayChamCong.Month == thang)
-        //            .ToListAsync();
+            // Tính tháng và năm của tháng trước
+            int thang = currentMonth == 1 ? 12 : currentMonth - 1;
+            int nam = currentMonth == 1 ? currentYear - 1 : currentYear;
 
-        //        if (!chamCongs.Any())
-        //        {
-        //            continue; // Không có chấm công => bỏ qua nhân viên này
-        //        }
+            var nhanViens = await _context.NhanViens.ToListAsync();
+            if (!nhanViens.Any()) return NotFound("Không có nhân viên nào trong hệ thống.");
 
-        //        // Tính số ngày làm việc & tổng số giờ tăng ca
-        //        int soNgayLam = chamCongs.Count(c => c.GioVao.HasValue && c.GioRa.HasValue);
-        //        decimal tongGioTangCa = chamCongs.Sum(c => c.SoGioTangCa);
+            var quyDinh = await _context.QuyDinhs.FirstOrDefaultAsync(q => q.MaQuyDinh == 1);
+            if (quyDinh == null) return BadRequest("Chưa có quy định lương.");
 
-        //        // Công thức tính lương
-        //        decimal luongCoBan = nhanVien.LuongCoBan;
-        //        decimal luongNgay = luongCoBan / 26; // Giả định 26 ngày làm việc/tháng
-        //        decimal luongTangCa = tongGioTangCa * (luongNgay / 8) * 1.5m; // Hệ số 1.5x cho tăng ca
-        //        decimal tongLuong = (soNgayLam * luongNgay) + luongTangCa;
+            // Lấy toàn bộ chấm công trong tháng để xử lý
+            var chamCongThang = await _context.ChamCongs
+                .Where(c => c.NgayChamCong.Month == thang && c.NgayChamCong.Year == nam)
+                .ToListAsync();
 
-        //        // Thêm vào danh sách lương mới
-        //        bangLuongsMoi.Add(new Luong
-        //        {
-        //            MaNhanVien = nhanVien.MaNhanVien,
-        //            Thang = thang,
-        //            Nam = nam,
-        //            LuongCoBan = luongCoBan,
-        //            soNgayLam = soNgayLam,
-        //            SoGioTangCa = tongGioTangCa,
-        //            TongLuong = tongLuong,
-        //            NgayTinhLuong = DateTime.Now
-        //        });
-        //    }
+            if (!chamCongThang.Any())
+            {
+                return BadRequest(new { message = $"Không có chấm công nào trong tháng {thang}/{nam}." });
+            }
 
-        //    // Lưu tất cả vào DB 1 lần (tối ưu hiệu suất)
-        //    if (bangLuongsMoi.Any())
-        //    {
-        //        _context.BangLuongs.AddRange(bangLuongsMoi);
-        //        await _context.SaveChangesAsync();
-        //    }
+            // Lấy danh sách lương đã tính để tránh trùng
+            var daTinhLuong = await _context.Luongs
+                .AnyAsync(l => l.Thang == thang && l.Nam == nam);
 
-        //    return Ok(new { message = $"Tính lương tháng {thang}/{nam} thành công!" });
-        //}
+            if (daTinhLuong)
+            {
+                return BadRequest(new { message = $"Lương tháng {thang}/{nam} đã được tính." });
+            }
+
+            List<Luong> bangLuongsMoi = new List<Luong>();
+
+            foreach (var nhanVien in nhanViens)
+            {
+                var chamCongs = chamCongThang
+                    .Where(c => c.MaNhanVien == nhanVien.MaNhanVien)
+                    .ToList();
+
+                if (!chamCongs.Any()) continue;
+
+                // Tính Lương
+                decimal tongGioTangCa = chamCongs.Sum(c => c.SoGioTangCa);
+
+                int ngayDiMuon = chamCongs.Count(c => c.TinhTrang == "Muộn");
+                int nghiPhep = chamCongs.Count(c => c.TinhTrang == "Nghỉ phép");
+                int nghiKoPhep = chamCongs.Count(c => c.TinhTrang == null);
+
+                decimal tienPhatDiMuon = ngayDiMuon * quyDinh.MucPhatDiMuon;
+                decimal tienPhatNghiQuaPhep = Math.Max(0, nghiPhep - quyDinh.SoNgayPhepMotThang) * quyDinh.TienPhatNghiQuaPhep;
+                decimal tienPhatNghiKoPhep = nghiKoPhep * quyDinh.TienPhatNghiKhongPhep;
+
+                decimal luongCoBan = nhanVien.LuongCoBan;
+                decimal luongTangCa = tongGioTangCa * quyDinh.TienThuongTangCa;
+                decimal tienPhat = tienPhatDiMuon + tienPhatNghiQuaPhep + tienPhatNghiKoPhep;
+
+                // Đảm bảo lương ko âm
+                decimal tongLuongTruocPhat = luongCoBan + luongTangCa;
+                tienPhat = Math.Min(tienPhat, tongLuongTruocPhat);
+
+                bangLuongsMoi.Add(new Luong
+                {
+                    MaNhanVien = nhanVien.MaNhanVien,
+                    Thang = thang,
+                    Nam = nam,
+                    LuongCoBan = luongCoBan,
+                    LuongTangCa = luongTangCa,
+                    TienPhat = tienPhat
+                });
+            }
+
+            if (bangLuongsMoi.Any())
+            {
+                _context.Luongs.AddRange(bangLuongsMoi);
+                await _context.SaveChangesAsync();
+            }
+
+            return Ok(new { message = $"Tính lương tháng {thang}/{nam} thành công!" });
+        }
+
+        [HttpGet("luong")]
+        public async Task<IActionResult> GetLuong(
+            [FromQuery] int? maNhanVien,
+            [FromQuery] string? hoTen,
+            [FromQuery] int? thang,
+            [FromQuery] int? nam,
+            [FromQuery] int page = 1)
+        {
+            var role = User.FindFirst(ClaimTypes.Role)?.Value;
+
+            if (role != "Admin")
+            {
+                return Unauthorized(new { Message = "Người dùng phải là admin để dùng chức năng này" });
+            }
+            int pageSize = 10; // Giá trị cố định
+
+            var query = _context.Luongs.AsQueryable();
+
+            if (maNhanVien.HasValue)
+            {
+                query = query.Where(nv => nv.MaNhanVien == maNhanVien.Value);
+            }
+
+            if (!string.IsNullOrEmpty(hoTen))
+            {
+                query = query.Where(nv => nv.MaNhanVienNavigation.HoTen.Contains(hoTen));
+            }
+
+            if (thang.HasValue)
+            {
+                query = query.Where(nv => nv.Thang == thang.Value);
+            }
+
+            if (nam.HasValue)
+            {
+                query = query.Where(nv => nv.Nam == nam.Value);
+            }
+
+            int totalRecords = await query.CountAsync();
+            int totalPages = (int)Math.Ceiling((double)totalRecords / pageSize);
+
+            var luongs = await query
+                .OrderByDescending(l => l.MaLuong)
+                .Skip((page - 1) * pageSize)
+                .Take(pageSize)
+                .Select(nv => new
+                {
+                    MaNhanVien = nv.MaNhanVien,
+                    HoTen = nv.MaNhanVienNavigation.HoTen,
+                    Nam = nv.Nam,
+                    Thang = nv.Thang,
+                    LuongCoBan = nv.LuongCoBan,
+                    LuongTangCa = nv.LuongTangCa,
+                    TienPhat = nv.TienPhat,
+                    TongCong = nv.LuongTongCong,
+                })
+                .ToListAsync();
+
+            return Ok(new
+            {
+                TotalPages = totalPages,
+                CurrentPage = page,
+                Data = luongs
+            });
+        }
+
+        [HttpGet("chiTietLuong")]
+        public async Task<IActionResult> GetChiTietLuong(
+            [FromQuery] int maNhanVien,
+            [FromQuery] int thang,
+            [FromQuery] int nam)
+        {
+            var role = User.FindFirst(ClaimTypes.Role)?.Value;
+
+            if (role != "Admin")
+            {
+                return Unauthorized(new { Message = "Người dùng phải là admin để dùng chức năng này" });
+            }
+
+            var chamCongThang = await _context.ChamCongs
+                .Where(c => c.NgayChamCong.Month == thang && c.NgayChamCong.Year == nam && c.MaNhanVien == maNhanVien)
+                .ToListAsync();
+
+            if (!chamCongThang.Any())
+            {
+                return BadRequest($"Không có chấm công nào trong tháng {thang}/{nam}."); // Trả về lỗi nếu không có dữ liệu
+            }
+
+            decimal tongGioTangCa = chamCongThang.Sum(c => c.SoGioTangCa);
+            int ngayDiMuon = chamCongThang.Count(c => c.TinhTrang == "Muộn");
+            int nghiPhep = chamCongThang.Count(c => c.TinhTrang == "Nghỉ phép");
+            int nghiKoPhep = chamCongThang.Count(c => c.TinhTrang == null);
+
+            return Ok(new
+            {
+                TongGioTangCa = tongGioTangCa,
+                NgayDiMuon = ngayDiMuon,
+                NghiPhep = nghiPhep,
+                NghiKoPhep = nghiKoPhep
+            });
+        }
+
+        [HttpPost("change-password")]
+        public async Task<IActionResult> ChangePassword([FromBody] ChangePasswordRequest request)
+        {
+            var role = User.FindFirst(ClaimTypes.Role)?.Value;
+            var maAdminClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            if (string.IsNullOrEmpty(maAdminClaim) || !int.TryParse(maAdminClaim, out int maAdmin))
+            {
+                return BadRequest("Không thể xác định người dùng.");
+            }
+
+            if (role != "Admin")
+            {
+                return Unauthorized(new { Message = "Người dùng phải là admin để dùng chức năng này" });
+            }
+
+            if (request == null || string.IsNullOrWhiteSpace(request.MatKhauCu) || string.IsNullOrWhiteSpace(request.MatKhauMoi) || string.IsNullOrWhiteSpace(request.NhapLaiMatKhau))
+            {
+                return BadRequest("Dữ liệu không hợp lệ. Vui lòng điền đầy đủ thông tin.");
+            }
+
+            var taiKhoan = await _context.Admins
+                .FirstOrDefaultAsync(a => a.MaAdmin == maAdmin);
+
+            if (taiKhoan == null)
+            {
+                return BadRequest("Tài khoản không tồn tại.");
+            }
+
+            if (!BCrypt.Net.BCrypt.Verify(request.MatKhauCu, taiKhoan.MatKhau))
+            {
+                return BadRequest("Mật khẩu cũ không đúng.");
+            }
+
+            if (request.MatKhauMoi != request.NhapLaiMatKhau)
+            {
+                return BadRequest("Mật khẩu mới và nhập lại mật khẩu không khớp.");
+            }
+
+            taiKhoan.MatKhau = BCrypt.Net.BCrypt.HashPassword(request.MatKhauMoi);
+            await _context.SaveChangesAsync();
+
+            return Ok("Đổi mật khẩu thành công.");
+        }
 
     }
 }

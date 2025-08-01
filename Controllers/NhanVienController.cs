@@ -842,5 +842,124 @@ namespace emnhanvien.Controllers
 
             return Ok("Xin nghỉ phép đã được xóa thành công.");
         }
+
+        [HttpGet("luong")]
+        public async Task<IActionResult> GetLuong()
+        {
+            var idString = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            var role = User.FindFirst(ClaimTypes.Role)?.Value;
+
+            if (role != "NhanVien")
+            {
+                return Unauthorized(new { Message = "Người dùng phải là nhân viên để dùng chức năng này" });
+            }
+
+            if (!int.TryParse(idString, out int id) || id <= 0)
+            {
+                return Unauthorized(new { Message = "Không tìm thấy thông tin người dùng trong token" });
+            }
+
+            var luong = await _context.Luongs
+                   .Where(a => a.MaNhanVien == id)
+                   .OrderByDescending(l => l.MaLuong)
+                   .Select(l => new
+                   {
+                       l.Thang,
+                       l.Nam,
+                       l.LuongCoBan,
+                       l.LuongTangCa,
+                       l.TienPhat,
+                       l.LuongTongCong
+                   })
+                   .ToListAsync();
+
+            return Ok(luong);
+        }
+
+        [HttpGet("chiTietLuong")]
+        public async Task<IActionResult> GetChiTietLuong(
+            [FromQuery] int thang,
+            [FromQuery] int nam)
+        {
+            var idString = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            var role = User.FindFirst(ClaimTypes.Role)?.Value;
+
+            if (role != "NhanVien")
+            {
+                return Unauthorized(new { Message = "Người dùng phải là nhân viên để dùng chức năng này" });
+            }
+
+            if (!int.TryParse(idString, out int id) || id <= 0)
+            {
+                return Unauthorized(new { Message = "Không tìm thấy thông tin người dùng trong token" });
+            }
+
+            var chamCongThang = await _context.ChamCongs
+                .Where(c => c.NgayChamCong.Month == thang && c.NgayChamCong.Year == nam && c.MaNhanVien == id)
+                .ToListAsync();
+
+            if (!chamCongThang.Any())
+            {
+                return BadRequest($"Không có chấm công nào trong tháng {thang}/{nam}."); // Trả về lỗi nếu không có dữ liệu
+            }
+
+            decimal tongGioTangCa = chamCongThang.Sum(c => c.SoGioTangCa);
+            int ngayDiMuon = chamCongThang.Count(c => c.TinhTrang == "Muộn");
+            int nghiPhep = chamCongThang.Count(c => c.TinhTrang == "Nghỉ phép");
+            int nghiKoPhep = chamCongThang.Count(c => c.TinhTrang == null);
+
+            return Ok(new
+            {
+                TongGioTangCa = tongGioTangCa,
+                NgayDiMuon = ngayDiMuon,
+                NghiPhep = nghiPhep,
+                NghiKoPhep = nghiKoPhep
+            });
+        }
+
+        [HttpPost("change-password")]
+        public async Task<IActionResult> ChangePassword([FromBody] ChangePasswordRequest request)
+        {
+            var idString = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            var role = User.FindFirst(ClaimTypes.Role)?.Value;
+
+            if (role != "NhanVien")
+            {
+                return Unauthorized(new { Message = "Người dùng phải là nhân viên để dùng chức năng này" });
+            }
+
+            if (!int.TryParse(idString, out int id) || id <= 0)
+            {
+                return Unauthorized(new { Message = "Không tìm thấy thông tin người dùng trong token" });
+            }
+
+            if (request == null || string.IsNullOrWhiteSpace(request.MatKhauCu) || string.IsNullOrWhiteSpace(request.MatKhauMoi) || string.IsNullOrWhiteSpace(request.NhapLaiMatKhau))
+            {
+                return BadRequest("Dữ liệu không hợp lệ. Vui lòng điền đầy đủ thông tin.");
+            }
+
+            var taiKhoan = await _context.NhanViens
+                .FirstOrDefaultAsync(a => a.MaNhanVien == id);
+
+            if (taiKhoan == null)
+            {
+                return BadRequest("Tài khoản không tồn tại.");
+            }
+
+            if (!BCrypt.Net.BCrypt.Verify(request.MatKhauCu, taiKhoan.MatKhau))
+            {
+                return BadRequest("Mật khẩu cũ không đúng.");
+            }
+
+            if (request.MatKhauMoi != request.NhapLaiMatKhau)
+            {
+                return BadRequest("Mật khẩu mới và nhập lại mật khẩu không khớp.");
+            }
+
+            taiKhoan.MatKhau = BCrypt.Net.BCrypt.HashPassword(request.MatKhauMoi);
+            await _context.SaveChangesAsync();
+
+            return Ok("Đổi mật khẩu thành công.");
+        }
     }
 }

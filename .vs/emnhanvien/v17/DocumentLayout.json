@@ -3,8 +3,8 @@
   "WorkspaceRootPath": "C:\\Users\\LAPTOP24H\\Desktop\\emnhanvien-20250729T144449Z-1-001\\emnhanvien\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{22F18559-0304-488A-8B09-D4690234CA6B}|emnhanvien.csproj|c:\\users\\laptop24h\\desktop\\emnhanvien-20250729t144449z-1-001\\emnhanvien\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{22F18559-0304-488A-8B09-D4690234CA6B}|emnhanvien.csproj|solutionrelative:program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{22F18559-0304-488A-8B09-D4690234CA6B}|emnhanvien.csproj|c:\\users\\laptop24h\\desktop\\emnhanvien-20250729t144449z-1-001\\emnhanvien\\controllers\\nhanviencontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{22F18559-0304-488A-8B09-D4690234CA6B}|emnhanvien.csproj|solutionrelative:controllers\\nhanviencontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     }
   ],
   "DocumentGroupContainers": [
@@ -19,14 +19,14 @@
             {
               "$type": "Document",
               "DocumentIndex": 0,
-              "Title": "Program.cs",
-              "DocumentMoniker": "C:\\Users\\LAPTOP24H\\Desktop\\emnhanvien-20250729T144449Z-1-001\\emnhanvien\\Program.cs",
-              "RelativeDocumentMoniker": "Program.cs",
-              "ToolTip": "C:\\Users\\LAPTOP24H\\Desktop\\emnhanvien-20250729T144449Z-1-001\\emnhanvien\\Program.cs",
-              "RelativeToolTip": "Program.cs",
-              "ViewState": "AgIAACgAAAAAAAAAAAAkwCsAAAAHAAAAAAAAAA==",
+              "Title": "NhanVienController.cs",
+              "DocumentMoniker": "C:\\Users\\LAPTOP24H\\Desktop\\emnhanvien-20250729T144449Z-1-001\\emnhanvien\\Controllers\\NhanVienController.cs",
+              "RelativeDocumentMoniker": "Controllers\\NhanVienController.cs",
+              "ToolTip": "C:\\Users\\LAPTOP24H\\Desktop\\emnhanvien-20250729T144449Z-1-001\\emnhanvien\\Controllers\\NhanVienController.cs",
+              "RelativeToolTip": "Controllers\\NhanVienController.cs",
+              "ViewState": "AgIAAK4DAAAAAAAAAAAkwMIDAAAJAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-07-31T08:42:32.014Z",
+              "WhenOpened": "2025-08-01T08:07:20.18Z",
               "EditorCaption": ""
             }
           ]
