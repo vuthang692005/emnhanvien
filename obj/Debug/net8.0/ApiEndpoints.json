@@ -1,6 +1,48 @@
 [
   {
     "ContainingType": "emnhanvien.Controllers.AdminController",
+    "Method": "ChangePassword",
+    "RelativePath": "api/admin/change-password",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "request",
+        "Type": "emnhanvien.DTO.ChangePasswordRequest",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "emnhanvien.Controllers.AdminController",
+    "Method": "GetChiTietLuong",
+    "RelativePath": "api/admin/chiTietLuong",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "maNhanVien",
+        "Type": "System.Int32",
+        "IsRequired": false
+      },
+      {
+        "Name": "thang",
+        "Type": "System.Int32",
+        "IsRequired": false
+      },
+      {
+        "Name": "nam",
+        "Type": "System.Int32",
+        "IsRequired": false
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "emnhanvien.Controllers.AdminController",
     "Method": "GetDangKyTangCaCD",
     "RelativePath": "api/admin/ChoDuyetDKTangCa",
     "HttpMethod": "GET",
@@ -133,6 +175,42 @@
       {
         "Name": "ngayChamCong",
         "Type": "System.DateOnly",
+        "IsRequired": false
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "emnhanvien.Controllers.AdminController",
+    "Method": "GetLuong",
+    "RelativePath": "api/admin/luong",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "maNhanVien",
+        "Type": "System.Nullable\u00601[[System.Int32, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
+        "IsRequired": false
+      },
+      {
+        "Name": "hoTen",
+        "Type": "System.String",
+        "IsRequired": false
+      },
+      {
+        "Name": "thang",
+        "Type": "System.Nullable\u00601[[System.Int32, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
+        "IsRequired": false
+      },
+      {
+        "Name": "nam",
+        "Type": "System.Nullable\u00601[[System.Int32, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
+        "IsRequired": false
+      },
+      {
+        "Name": "page",
+        "Type": "System.Int32",
         "IsRequired": false
       }
     ],
@@ -292,6 +370,16 @@
   },
   {
     "ContainingType": "emnhanvien.Controllers.AdminController",
+    "Method": "TinhLuongThang",
+    "RelativePath": "api/admin/TinhLuongThang",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "emnhanvien.Controllers.AdminController",
     "Method": "GetDangKyTangCaTC",
     "RelativePath": "api/admin/TuChoiDKTangCa",
     "HttpMethod": "GET",
@@ -433,6 +521,22 @@
   },
   {
     "ContainingType": "emnhanvien.Controllers.NhanVienController",
+    "Method": "ChangePassword",
+    "RelativePath": "api/NhanVien/change-password",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "request",
+        "Type": "emnhanvien.DTO.ChangePasswordRequest",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "emnhanvien.Controllers.NhanVienController",
     "Method": "CheckIn",
     "RelativePath": "api/NhanVien/CheckIn",
     "HttpMethod": "PUT",
@@ -458,6 +562,27 @@
       {
         "Name": "ngayChamCong",
         "Type": "System.DateOnly",
+        "IsRequired": false
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "emnhanvien.Controllers.NhanVienController",
+    "Method": "GetChiTietLuong",
+    "RelativePath": "api/NhanVien/chiTietLuong",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "thang",
+        "Type": "System.Int32",
+        "IsRequired": false
+      },
+      {
+        "Name": "nam",
+        "Type": "System.Int32",
         "IsRequired": false
       }
     ],
@@ -537,6 +662,16 @@
         "IsRequired": false
       }
     ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "emnhanvien.Controllers.NhanVienController",
+    "Method": "GetLuong",
+    "RelativePath": "api/NhanVien/luong",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
     "ReturnTypes": []
   },
   {

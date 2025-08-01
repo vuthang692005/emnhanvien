@@ -39,7 +39,7 @@ namespace emnhanvien.Controllers
 
             if (admin != null && BCrypt.Net.BCrypt.Verify(loginUserDto.MatKhau, admin.MatKhau))
             {
-                var token = GenerateJwtToken(admin.TaiKhoan, "Admin");
+                var token = GenerateJwtToken(admin.TaiKhoan, "Admin", admin.MaAdmin);
                 return Ok(new { Token = token, role = "Admin"});
             }
 
