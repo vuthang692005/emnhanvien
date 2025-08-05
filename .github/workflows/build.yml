@@ -2,8 +2,12 @@ name: CI/CD Deploy to Render
 
 on:
   push:
+    branches-ignore:
+      - master  # Push vào nhánh KHÁC master → chỉ chạy CI
+  pull_request:
     branches:
-      - master
+      - master  # PR vào master → chạy CI/CD
+  workflow_dispatch:  # Cho phép chạy tay nếu cần
 
 jobs:
   build-and-test:
@@ -32,6 +36,7 @@ jobs:
         run: dotnet test --no-build --verbosity normal
 
   sonar-analysis:
+    if: github.event_name == 'pull_request' || github.ref == 'refs/heads/master'
     needs: build-and-test
     runs-on: ubuntu-latest
     steps:
@@ -57,6 +62,7 @@ jobs:
           dotnet sonarscanner end /d:sonar.token="${{ secrets.SONAR_TOKEN }}"
 
   deploy:
+    if: github.event_name == 'pull_request' || github.ref == 'refs/heads/master'
     needs: [build-and-test, sonar-analysis]
     runs-on: ubuntu-latest
     steps:
