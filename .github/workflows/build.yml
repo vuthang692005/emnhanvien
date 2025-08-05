@@ -13,8 +13,19 @@ jobs:
       - uses: actions/setup-dotnet@v4
         with:
           dotnet-version: '8.0.x'
-      - run: dotnet restore
-      - run: dotnet build --no-restore
+
+      - name: Install SonarCloud scanner
+        uses: SonarSource/sonarcloud-github-action@v2
+
+      - name: Run SonarCloud analysis
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        run: |
+          dotnet sonarscanner begin /k:"vuthang692005_emnhanvien" /o:"vuthang692005" /d:sonar.token="${{ secrets.SONAR_TOKEN }}"
+          dotnet restore
+          dotnet build
+          dotnet sonarscanner end /d:sonar.token="${{ secrets.SONAR_TOKEN }}"
+
       - run: dotnet test --no-build
 
   deploy:
