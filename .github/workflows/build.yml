@@ -23,6 +23,24 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-nuget-
 
+      - name: Restore and Build
+        run: |
+          dotnet restore
+          dotnet build --no-restore
+
+      - name: Run tests
+        run: dotnet test --no-build --verbosity normal
+
+  sonar-analysis:
+    needs: build-and-test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '8.0.x'
+
       - name: Install SonarScanner for .NET
         run: dotnet tool install --global dotnet-sonarscanner
 
@@ -38,11 +56,8 @@ jobs:
           dotnet build --no-restore
           dotnet sonarscanner end /d:sonar.token="${{ secrets.SONAR_TOKEN }}"
 
-      - name: Run tests
-        run: dotnet test --no-build --verbosity normal
-
   deploy:
-    needs: build-and-test
+    needs: [build-and-test, sonar-analysis]
     runs-on: ubuntu-latest
     steps:
       - name: Trigger deploy to Render
