@@ -10,12 +10,24 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
+
       - uses: actions/setup-dotnet@v4
         with:
           dotnet-version: '8.0.x'
 
-      - name: Install SonarCloud scanner
-        uses: SonarSource/sonarcloud-github-action@v2
+      - name: Cache NuGet packages
+        uses: actions/cache@v3
+        with:
+          path: ~/.nuget/packages
+          key: ${{ runner.os }}-nuget-${{ hashFiles('**/*.csproj') }}
+          restore-keys: |
+            ${{ runner.os }}-nuget-
+
+      - name: Install SonarScanner for .NET
+        run: dotnet tool install --global dotnet-sonarscanner
+
+      - name: Add dotnet tools to PATH
+        run: echo "${HOME}/.dotnet/tools" >> $GITHUB_PATH
 
       - name: Run SonarCloud analysis
         env:
@@ -23,10 +35,11 @@ jobs:
         run: |
           dotnet sonarscanner begin /k:"vuthang692005_emnhanvien" /o:"vuthang692005" /d:sonar.token="${{ secrets.SONAR_TOKEN }}"
           dotnet restore
-          dotnet build
+          dotnet build --no-restore
           dotnet sonarscanner end /d:sonar.token="${{ secrets.SONAR_TOKEN }}"
 
-      - run: dotnet test --no-build
+      - name: Run tests
+        run: dotnet test --no-build --verbosity normal
 
   deploy:
     needs: build-and-test
