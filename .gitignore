@@ -2,4 +2,4 @@
 ".vs/" 
 -e "obj/\nbin/" 
 .vs/
-.gitignore
+appsettings.json
