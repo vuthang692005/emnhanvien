@@ -12,19 +12,19 @@ public class LoginControllerTests
 {
     private QuanLyNhanSuContext GetInMemoryDb()
     {
-        var opt = new DbContextOptionsBuilder<QuanLyNhanSuContext>()
-                    .UseInMemoryDatabase(databaseName: Guid.NewGuid().ToString())
-                    .Options;
+        var options = new DbContextOptionsBuilder<QuanLyNhanSuContext>()
+            .UseInMemoryDatabase(databaseName: Guid.NewGuid().ToString())
+            .EnableSensitiveDataLogging() // Giúp debug dễ hơn
+            .Options;
 
-        var db = new QuanLyNhanSuContext(opt);
-        return db;
+        return new QuanLyNhanSuContext(options);
     }
 
     private IConfiguration GetFakeConfig()
     {
-        var dic = new Dictionary<string, string>
+        var dic = new Dictionary<string, string?>
         {
-            ["Jwt:Key"] = "supersecretkey123456",
+            ["Jwt:Key"] = "supersecretkey1234567890supersecretkey123",
             ["Jwt:Issuer"] = "test",
             ["Jwt:Audience"] = "test",
             ["Jwt:ExpiresInHours"] = "1"
@@ -42,21 +42,48 @@ public class LoginControllerTests
         db.Admins.Add(new Admin
         {
             TaiKhoan = "admin1",
-            MatKhau = BCrypt.Net.BCrypt.HashPassword("123")
+            MatKhau = BCrypt.Net.BCrypt.HashPassword("123456")
         });
-        db.SaveChanges();
+        await db.SaveChangesAsync();
 
-        var controller = new LoginController(db, GetFakeConfig());
+        var config = new ConfigurationBuilder()
+            .AddInMemoryCollection(new Dictionary<string, string>
+            {
+                ["Jwt:Key"] = "this_is_a_very_long_secret_key_at_least_32_chars",
+                ["Jwt:Issuer"] = "test",
+                ["Jwt:Audience"] = "test",
+                ["Jwt:ExpiresInHours"] = "1"
+            })
+            .Build();
 
-        var request = new LoginRequest { TaiKhoan = "admin1", MatKhau = "123" };
+        var controller = new LoginController(db, config);
+
+        var request = new LoginRequest
+        {
+            TaiKhoan = "admin1",
+            MatKhau = "123456"
+        };
 
         // Act
         var result = await controller.Login(request);
 
         // Assert
-        var ok = Assert.IsType<OkObjectResult>(result);
-        Assert.NotNull(((dynamic)ok.Value).Token);
-        Assert.Equal("Admin", ((dynamic)ok.Value).role);
+        var okResult = Assert.IsType<OkObjectResult>(result);
+        var response = okResult.Value as dynamic;
+        Assert.NotNull(response);
+
+        // Kiểm tra token và role thông qua reflection
+        var tokenProperty = response.GetType().GetProperty("Token");
+        var roleProperty = response.GetType().GetProperty("role");
+
+        Assert.NotNull(tokenProperty);
+        Assert.NotNull(roleProperty);
+
+        var tokenValue = tokenProperty.GetValue(response, null);
+        var roleValue = roleProperty.GetValue(response, null);
+
+        Assert.NotNull(tokenValue);
+        Assert.Equal("Admin", roleValue?.ToString());
     }
 }
 

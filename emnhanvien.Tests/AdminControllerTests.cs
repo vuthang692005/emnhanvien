@@ -12,11 +12,12 @@ public class AdminControllerTests
 {
     private QuanLyNhanSuContext GetInMemoryDb()
     {
-        var opt = new DbContextOptionsBuilder<QuanLyNhanSuContext>()
+        var options = new DbContextOptionsBuilder<QuanLyNhanSuContext>()
             .UseInMemoryDatabase(databaseName: Guid.NewGuid().ToString())
+            .EnableSensitiveDataLogging() // Giúp debug dễ hơn
             .Options;
 
-        return new QuanLyNhanSuContext(opt);
+        return new QuanLyNhanSuContext(options);
     }
 
     private AdminController GetController(QuanLyNhanSuContext db, bool isAdmin = true)
@@ -42,19 +43,25 @@ public class AdminControllerTests
         // Arrange
         var db = GetInMemoryDb();
         db.PhongBans.Add(new PhongBan { MaPhongBan = 1, TenPhongBan = "IT" });
+
+        // Thêm đầy đủ thông tin nhân viên
         db.NhanViens.Add(new NhanVien
         {
             MaNhanVien = 1,
             HoTen = "Nguyen Van A",
-            MaPhongBan = 1,
-            ChucVu = "dev",
+            TaiKhoan = "nva123",
+            MatKhau = BCrypt.Net.BCrypt.HashPassword("password123"),
+            NgaySinh = DateOnly.FromDateTime(DateTime.Now.AddYears(-30)),
+            GioiTinh = "Nam",
+            SoDienThoai = "1234567890",
             Email = "a@gmail.com",
-            SoDienThoai = "123456",
-            NgaySinh = DateOnly.FromDateTime(DateTime.Now),
+            MaPhongBan = 1,
+            ChucVu = "Developer",
             NgayVaoLam = DateOnly.FromDateTime(DateTime.Now),
             LuongCoBan = 1000
         });
-        db.SaveChanges();
+
+        await db.SaveChangesAsync();
 
         var controller = GetController(db, true);
 
@@ -70,28 +77,35 @@ public class AdminControllerTests
     {
         // Arrange
         var db = GetInMemoryDb();
+        db.PhongBans.Add(new PhongBan { MaPhongBan = 1, TenPhongBan = "IT" });
+        await db.SaveChangesAsync();
+
         var controller = GetController(db);
 
         var dto = new NhanVienDto
         {
             HoTen = "Nguyen Van B",
-            NgaySinh = DateOnly.FromDateTime(DateTime.Now),
+            NgaySinh = DateOnly.FromDateTime(DateTime.Now.AddYears(-25)),
             GioiTinh = "Nam",
-            SoDienThoai = "789456",
+            SoDienThoai = "0987654321",
             Email = "b@gmail.com",
             MaPhongBan = 1,
-            ChucVu = "dev",
-            LuongCoBan = 1000
+            ChucVu = "Tester",
+            LuongCoBan = 800
         };
-
-        db.PhongBans.Add(new PhongBan { MaPhongBan = 1, TenPhongBan = "IT" });
-        db.SaveChanges();
 
         // Act
         var result = await controller.AddNhanVien(dto);
 
         // Assert
         Assert.IsType<CreatedResult>(result);
+        var nhanVien = await db.NhanViens.FirstOrDefaultAsync();
+        Assert.NotNull(nhanVien);
+        Assert.Equal("Nguyen Van B", nhanVien.HoTen);
+        Assert.Equal("Nam", nhanVien.GioiTinh);
+        // Kiểm tra controller đã tự tạo tài khoản/mật khẩu mặc định
+        Assert.False(string.IsNullOrEmpty(nhanVien.TaiKhoan));
+        Assert.False(string.IsNullOrEmpty(nhanVien.MatKhau));
     }
 
     [Fact]
@@ -99,29 +113,33 @@ public class AdminControllerTests
     {
         // Arrange
         var db = GetInMemoryDb();
-
         db.PhongBans.Add(new PhongBan { MaPhongBan = 1, TenPhongBan = "IT" });
+
         db.NhanViens.Add(new NhanVien
         {
             MaNhanVien = 1,
             HoTen = "Nguyen Van C",
-            MaPhongBan = 1,
+            TaiKhoan = "nvc123",
+            MatKhau = BCrypt.Net.BCrypt.HashPassword("password123"),
+            NgaySinh = DateOnly.FromDateTime(DateTime.Now.AddYears(-28)),
+            GioiTinh = "Nam",
+            SoDienThoai = "0912345678",
             Email = "c@gmail.com",
-            SoDienThoai = "111111",
-            ChucVu = "dev",
-            NgaySinh = DateOnly.FromDateTime(DateTime.Now),
+            MaPhongBan = 1,
+            ChucVu = "Dev",
             NgayVaoLam = DateOnly.FromDateTime(DateTime.Now),
-            LuongCoBan = 1000
+            LuongCoBan = 900
         });
-        db.SaveChanges();
+
+        await db.SaveChangesAsync();
 
         var controller = GetController(db);
 
         var updated = new NhanVienUpdateDto
         {
             TenPhongBan = "IT",
-            ChucVu = "lead dev",
-            LuongCoBan = 2000
+            ChucVu = "Senior Dev",
+            LuongCoBan = 1200
         };
 
         // Act
@@ -129,6 +147,9 @@ public class AdminControllerTests
 
         // Assert
         Assert.IsType<OkObjectResult>(res);
+        var updatedNhanVien = await db.NhanViens.FindAsync(1);
+        Assert.Equal("Senior Dev", updatedNhanVien.ChucVu);
+        Assert.Equal(1200, updatedNhanVien.LuongCoBan);
     }
 
     [Fact]
@@ -136,20 +157,24 @@ public class AdminControllerTests
     {
         // Arrange
         var db = GetInMemoryDb();
+        db.PhongBans.Add(new PhongBan { MaPhongBan = 1, TenPhongBan = "IT" });
 
         db.NhanViens.Add(new NhanVien
         {
             MaNhanVien = 1,
             HoTen = "Nguyen Van D",
-            MaPhongBan = 1,
-            Email = "d@gmail.com",
+            TaiKhoan = "nvd123",
+            MatKhau = BCrypt.Net.BCrypt.HashPassword("password123"),
+            NgaySinh = DateOnly.FromDateTime(DateTime.Now.AddYears(-25)),
+            GioiTinh = "Nam",
             SoDienThoai = "222222",
+            Email = "d@gmail.com",
+            MaPhongBan = 1,
             ChucVu = "dev",
-            NgaySinh = DateOnly.FromDateTime(DateTime.Now),
             NgayVaoLam = DateOnly.FromDateTime(DateTime.Now),
             LuongCoBan = 1000
         });
-        db.SaveChanges();
+        await db.SaveChangesAsync();
 
         var controller = GetController(db);
 
