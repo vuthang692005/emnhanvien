@@ -29,13 +29,13 @@ jobs:
 
       - name: Restore and Build
         run: |
+          cd emnhanvien
           dotnet restore
-          dotnet build --no-restore
+          cd ..
+          dotnet build EmNhanVien.sln --no-restore
 
       - name: Run tests
-        run: |
-          cd emnhanvien.Tests
-          dotnet test --no-build --verbosity normal
+        run: dotnet test EmNhanVien.sln --no-build --verbosity normal
 
   sonar-analysis:
     if: github.event_name == 'pull_request' || github.ref == 'refs/heads/master'
