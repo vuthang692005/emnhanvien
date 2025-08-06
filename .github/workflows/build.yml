@@ -76,6 +76,4 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Trigger deploy to Render
-        run: |
-          cd emnhanvien
-          curl -X POST ${{ secrets.RENDER_DEPLOY_HOOK }}
+        run: curl -X POST ${{ secrets.RENDER_DEPLOY_HOOK }}
