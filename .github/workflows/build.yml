@@ -29,9 +29,8 @@ jobs:
 
       - name: Clean
         run: |
-          dotnet clean emnhanvien/emnhanvien.sln
-          rm -rf emnhanvien.Tests/obj/
-          rm -rf emnhanvien.Tests/bin/
+          rm -rf emnhanvien/obj/ emnhanvien/bin/
+          rm -rf emnhanvien.Tests/obj/ emnhanvien.Tests/bin/
 
       - name: Restore and Build
         run: |
