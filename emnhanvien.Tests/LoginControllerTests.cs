@@ -4,6 +4,7 @@ using emnhanvien.DTO;
 using emnhanvien.Model;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using Xunit;
 
 namespace emnhanvien.Tests;

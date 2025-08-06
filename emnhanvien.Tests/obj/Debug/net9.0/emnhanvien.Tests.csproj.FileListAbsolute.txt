@@ -1,0 +1,8 @@
+C:\Users\ASUS\Desktop\software_deployment\emnhanvien\emnhanvien.Tests\bin\Debug\net9.0\.msCoverageSourceRootsMapping_emnhanvien.Tests
+C:\Users\ASUS\Desktop\software_deployment\emnhanvien\emnhanvien.Tests\bin\Debug\net9.0\CoverletSourceRootsMapping_emnhanvien.Tests
+C:\Users\ASUS\Desktop\software_deployment\emnhanvien\emnhanvien.Tests\obj\Debug\net9.0\emnhanvien.Tests.csproj.AssemblyReference.cache
+C:\Users\ASUS\Desktop\software_deployment\emnhanvien\emnhanvien.Tests\obj\Debug\net9.0\emnhanvien.Tests.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\ASUS\Desktop\software_deployment\emnhanvien\emnhanvien.Tests\obj\Debug\net9.0\emnhanvien.Tests.AssemblyInfoInputs.cache
+C:\Users\ASUS\Desktop\software_deployment\emnhanvien\emnhanvien.Tests\obj\Debug\net9.0\emnhanvien.Tests.AssemblyInfo.cs
+C:\Users\ASUS\Desktop\software_deployment\emnhanvien\emnhanvien.Tests\obj\Debug\net9.0\emnhanvien.Tests.csproj.CoreCompileInputs.cache
+C:\Users\ASUS\Desktop\software_deployment\emnhanvien\emnhanvien.Tests\obj\Debug\net9.0\emnhanvien.Tests.sourcelink.json
