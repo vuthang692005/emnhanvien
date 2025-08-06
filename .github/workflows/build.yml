@@ -41,7 +41,7 @@ jobs:
       - name: Run tests
         run: |
           cd emnhanvien.Tests
-          dotnet test --no-build --verbosity normal --configuration Release --logger "console;verbosity=detailed"
+          dotnet test --configuration Release --verbosity normal --logger "console;verbosity=detailed"
 
   sonar-analysis:
     if: github.event_name == 'pull_request' || github.ref == 'refs/heads/master'
