@@ -77,5 +77,4 @@ jobs:
     steps:
       - name: Trigger deploy to Render
         run: |
-          cd emnhanvien
           curl -X POST ${{ secrets.RENDER_DEPLOY_HOOK }}
