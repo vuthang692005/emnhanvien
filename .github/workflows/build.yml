@@ -1,0 +1,72 @@
+name: CI/CD Deploy to Render
+
+on:
+  push:
+    branches-ignore:
+      - master  # Push vào nhánh KHÁC master → chỉ chạy CI
+  pull_request:
+    branches:
+      - master  # PR vào master → chạy CI/CD
+  workflow_dispatch:  # Cho phép chạy tay nếu cần
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '8.0.x'
+
+      - name: Cache NuGet packages
+        uses: actions/cache@v3
+        with:
+          path: ~/.nuget/packages
+          key: ${{ runner.os }}-nuget-${{ hashFiles('**/*.csproj') }}
+          restore-keys: |
+            ${{ runner.os }}-nuget-
+
+      - name: Restore and Build
+        run: |
+          dotnet restore
+          dotnet build --no-restore
+
+      - name: Run tests
+        run: |
+          cd emnhanvien.Tests
+          dotnet test --no-build --verbosity normal
+
+  sonar-analysis:
+    if: github.event_name == 'pull_request' || github.ref == 'refs/heads/master'
+    needs: build-and-test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '8.0.x'
+
+      - name: Install SonarScanner for .NET
+        run: dotnet tool install --global dotnet-sonarscanner
+
+      - name: Add dotnet tools to PATH
+        run: echo "${HOME}/.dotnet/tools" >> $GITHUB_PATH
+
+      - name: Run SonarCloud analysis
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        run: |
+          dotnet sonarscanner begin /k:"vuthang692005_emnhanvien" /o:"vuthang692005" /d:sonar.token="${{ secrets.SONAR_TOKEN }}"
+          dotnet restore
+          dotnet build --no-restore
+          dotnet sonarscanner end /d:sonar.token="${{ secrets.SONAR_TOKEN }}"
+
+  deploy:
+    if: github.event_name == 'pull_request' || github.ref == 'refs/heads/master'
+    needs: [build-and-test, sonar-analysis]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Trigger deploy to Render
+        run: curl -X POST ${{ secrets.RENDER_DEPLOY_HOOK }}

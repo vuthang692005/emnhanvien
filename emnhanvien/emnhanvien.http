@@ -1,0 +1,6 @@
+@emnhanvien_HostAddress = http://localhost:5251
+
+GET {{emnhanvien_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
