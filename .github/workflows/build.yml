@@ -27,15 +27,21 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-nuget-
 
+      - name: Clean
+        run: |
+          rm -rf emnhanvien/obj/ emnhanvien/bin/
+          rm -rf emnhanvien.Tests/obj/ emnhanvien.Tests/bin/
+
       - name: Restore and Build
         run: |
-          dotnet restore
-          dotnet build --no-restore
+          dotnet restore emnhanvien/emnhanvien.sln
+          dotnet restore emnhanvien.Tests/emnhanvien.Tests.csproj
+          dotnet build emnhanvien/emnhanvien.sln --no-restore --configuration Release
 
       - name: Run tests
         run: |
           cd emnhanvien.Tests
-          dotnet test --no-build --verbosity normal
+          dotnet test --configuration Release --verbosity normal --logger "console;verbosity=detailed"
 
   sonar-analysis:
     if: github.event_name == 'pull_request' || github.ref == 'refs/heads/master'
