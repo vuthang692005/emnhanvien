@@ -53,7 +53,7 @@ namespace emnhanvien.Controllers
                 return Ok(new { Token = token,role = "NhanVien" });
             }
 
-            return Unauthorized("Tên đăng nhập hoặc mật khẩu không chính xác.");
+            return Unauthorized("Tên đăng nhập hoặc mật khẩu không chính xác!");
         }
 
         private string GenerateJwtToken(string username, string role, int? maNhanVien = null)
