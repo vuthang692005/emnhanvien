@@ -1,20 +1,15 @@
-name: CI/CD Deploy to Render
+name: CI Pipeline
 
 on:
   push:
     branches-ignore:
-      - master  # Push vào nhánh khác master → chạy CI
+      - master
   pull_request:
     branches:
-      - master  # Khi mở PR vào master → chạy CI + sonar
-  workflow_run:
-    workflows: ["CI/CD Deploy to Render"]
-    types:
-      - completed  # Chạy sau khi workflow kia chạy xong (cho merge vào master)
+      - master
 
 jobs:
   build-and-test:
-    if: github.event_name != 'workflow_run'  # Tránh chạy lại sau khi merge
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
@@ -73,10 +68,3 @@ jobs:
           dotnet restore
           dotnet build --no-restore
           dotnet sonarscanner end /d:sonar.token="${{ secrets.SONAR_TOKEN }}"
-
-  deploy:
-    if: github.event_name == 'workflow_run' && github.event.workflow_run.conclusion == 'success'
-    runs-on: ubuntu-latest
-    steps:
-      - name: Trigger deploy to Render
-        run: curl -X POST ${{ secrets.RENDER_DEPLOY_HOOK }}
