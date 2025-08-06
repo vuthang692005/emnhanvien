@@ -64,6 +64,7 @@ jobs:
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         run: |
+          cd emnhanvien
           dotnet sonarscanner begin /k:"vuthang692005_emnhanvien" /o:"vuthang692005" /d:sonar.token="${{ secrets.SONAR_TOKEN }}"
           dotnet restore
           dotnet build --no-restore
@@ -75,4 +76,6 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Trigger deploy to Render
-        run: curl -X POST ${{ secrets.RENDER_DEPLOY_HOOK }}
+        run: |
+          cd emnhanvien
+          curl -X POST ${{ secrets.RENDER_DEPLOY_HOOK }}
