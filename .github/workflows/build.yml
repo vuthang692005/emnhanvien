@@ -29,9 +29,8 @@ jobs:
 
       - name: Restore and Build
         run: |
-          dotnet restore emnhanvien/emnhanvien.sln
-          dotnet restore emnhanvien.Tests/emnhanvien.Tests.csproj
-          dotnet build emnhanvien/emnhanvien.sln --no-restore --configuration Release
+          dotnet restore EmNhanVien.sln
+          dotnet build EmNhanVien.sln --no-restore --configuration Release
 
       - name: Run tests
         run: dotnet test EmNhanVien.sln --no-build --verbosity normal --configuration Release
