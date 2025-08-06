@@ -1,0 +1,4 @@
+-e ".vs/\nobj/\nbin/" 
+".vs/" 
+-e "obj/\nbin/" 
+.vs/
