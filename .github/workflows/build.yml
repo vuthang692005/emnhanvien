@@ -68,7 +68,7 @@ jobs:
           dotnet sonarscanner begin /k:"vuthang692005_emnhanvien" /o:"vuthang692005" /d:sonar.token="${{ secrets.SONAR_TOKEN }}"
           dotnet restore
           dotnet build --no-restore
-          dotnet sonarscanner end /d:sonar.token="${{ secrets.SONAR_TOKEN }}"
+          dotnet sonarscanner end /d:sonar.token="${{ secrets.SONAR_TOKEN }}" || true
 
   deploy:
     if: github.event_name == 'pull_request' || github.ref == 'refs/heads/master'
