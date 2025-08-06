@@ -71,7 +71,7 @@ jobs:
           dotnet sonarscanner end /d:sonar.token="${{ secrets.SONAR_TOKEN }}"
 
   deploy:
-    if: github.event_name == 'pull_request' || github.ref == 'refs/heads/master'
+    if: github.ref == 'refs/heads/master'
     needs: [build-and-test, sonar-analysis]
     runs-on: ubuntu-latest
     steps:
