@@ -33,7 +33,9 @@ jobs:
           dotnet build --no-restore
 
       - name: Run tests
-        run: dotnet test --no-build --verbosity normal
+        run: |
+          cd emnhanvien.Tests
+          dotnet test --no-build --verbosity normal
 
   sonar-analysis:
     if: github.event_name == 'pull_request' || github.ref == 'refs/heads/master'
