@@ -1,13 +1,12 @@
-﻿using emnhanvien.Controllers;
+﻿
+using emnhanvien.Controllers;
 using emnhanvien.DTO;
 using emnhanvien.Model;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.InMemory;
-using Microsoft.Extensions.Configuration;
-using System.Threading.Tasks;
 using Xunit;
 
+namespace emnhanvien.Tests;
 public class LoginControllerTests
 {
     private QuanLyNhanSuContext GetInMemoryDb()
@@ -59,3 +58,4 @@ public class LoginControllerTests
         Assert.Equal("Admin", ((dynamic)ok.Value).role);
     }
 }
+
