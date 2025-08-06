@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\ASUS\\Desktop\\software_deployment\\emnhanvien\\EmNhanVien.csproj": {}
+    "C:\\Users\\ASUS\\Desktop\\emnhanvien2\\emnhanvien\\emnhanvien\\emnhanvien.csproj": {}
   },
   "projects": {
-    "C:\\Users\\ASUS\\Desktop\\software_deployment\\emnhanvien\\EmNhanVien.csproj": {
+    "C:\\Users\\ASUS\\Desktop\\emnhanvien2\\emnhanvien\\emnhanvien\\emnhanvien.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\ASUS\\Desktop\\software_deployment\\emnhanvien\\EmNhanVien.csproj",
-        "projectName": "EmNhanVien",
-        "projectPath": "C:\\Users\\ASUS\\Desktop\\software_deployment\\emnhanvien\\EmNhanVien.csproj",
+        "projectUniqueName": "C:\\Users\\ASUS\\Desktop\\emnhanvien2\\emnhanvien\\emnhanvien\\emnhanvien.csproj",
+        "projectName": "emnhanvien",
+        "projectPath": "C:\\Users\\ASUS\\Desktop\\emnhanvien2\\emnhanvien\\emnhanvien\\emnhanvien.csproj",
         "packagesPath": "C:\\Users\\ASUS\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\ASUS\\Desktop\\software_deployment\\emnhanvien\\obj\\",
+        "outputPath": "C:\\Users\\ASUS\\Desktop\\emnhanvien2\\emnhanvien\\emnhanvien\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"

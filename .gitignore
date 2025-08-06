@@ -2,4 +2,3 @@
 ".vs/" 
 -e "obj/\nbin/" 
 .vs/
-appsettings.json
