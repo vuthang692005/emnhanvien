@@ -36,10 +36,12 @@ jobs:
         run: |
           dotnet restore emnhanvien/emnhanvien.sln
           dotnet restore emnhanvien.Tests/emnhanvien.Tests.csproj
-          dotnet build EmNhanVien.sln --no-restore --configuration Release
+          dotnet build emnhanvien/emnhanvien.sln --no-restore --configuration Release
 
       - name: Run tests
-        run: dotnet test EmNhanVien.sln --no-build --configuration Release --verbosity normal --logger "console;verbosity=detailed"
+        run: |
+          cd emnhanvien.Tests
+          dotnet test --configuration Release --verbosity normal --logger "console;verbosity=detailed"
 
   sonar-analysis:
     if: github.event_name == 'pull_request' || github.ref == 'refs/heads/master'
