@@ -10,7 +10,7 @@
 
 ## 🌐 Link demo
 - **Swagger API**: [Xem tại đây](https://emnhanvien.onrender.com/swagger/index.html)
-- **Frontend**: [Xem tại đây](https://daptraicaidu.github.io/qlnv-fe/src/views/admin/index.html)
+- **Frontend**: [Xem tại đây](https://daptraicaidu.github.io/qlnv-fe/src/views/auth/login.html)
 
 ---
 
